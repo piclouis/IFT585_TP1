@@ -11,17 +11,13 @@ public class UDPTest {
     Client client;
     @Before
     public void setup() throws IOException {
-        new Server().start();
+        //new Server().start();
         client = new Client();
     }
 
     @Test
-    public void sendAndReceive() throws IOException {
-        String echo = client.send("TEST");
-        assertEquals("TEST", echo);
-
-        echo = client.send("TEST2");
-        assertFalse(echo.equals("TEST"));
+    public void send() throws IOException {
+        client.send();
     }
 
     @After

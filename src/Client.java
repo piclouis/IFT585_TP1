@@ -1,40 +1,48 @@
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.*;
 
 public class Client {
+    final static int MESSAGE_LENGTH = 1021;
+    final static int WINDOW_SIZE = 5;
+
     private DatagramSocket socket;
     private InetAddress address;
     private byte[] buffer;
 
     public Client() throws IOException {
-        createSocket(Server.PORT);
-        address = InetAddress.getByName("localhost");
-    }
-
-    private void createSocket(int port) throws IOException {
         socket = new DatagramSocket();
+        address = InetAddress.getByName(Server.SERVER_NAME);
+
+        File file = new File("test");
+        byte[] fileByteArray = new byte[(int) file.length()];
     }
 
-    private void create() {
+    public void send() throws IOException {
+        int noAck = 0;
+        int nbPackets = 20;
+        int window = WINDOW_SIZE;
 
+        while(noAck < nbPackets) {
+            int noPacket;
+            for(noPacket = noAck; noPacket < window; ++noPacket) {
+                System.out.println("Send no packet:" + noPacket);
+            }
+
+            noAck = 3;
+            System.out.println("Last Ack:" + noAck);
+            window = (window < nbPackets) ? window + (noAck - noPacket) : nbPackets;
+        }
     }
 
-    private String read() throws IOException {
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-        socket.receive(packet);
-        String received = new String(packet.getData(), 0, packet.getLength());
-        return received;
-    }
+    private void read() {
+        while(true) {
 
-    public String send(String msg) throws IOException {
-        buffer = msg.getBytes();
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length,address, Server.PORT);
-        socket.send(packet);
-        return read();
+        }
     }
 
     public void close() throws IOException {
-        send("end");
         socket.close();
     }
 }
